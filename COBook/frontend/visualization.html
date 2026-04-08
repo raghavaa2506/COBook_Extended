@@ -1,0 +1,835 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COBOL Program Visualization - USERINPUT-DEMO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f1f5f9;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border: rgba(148, 163, 184, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        
+        .format-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        .program-header {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .program-info-item {
+            text-align: center;
+        }
+        
+        .program-info-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .program-info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .col-12 { grid-column: span 12; }
+        .col-8 { grid-column: span 8; }
+        .col-6 { grid-column: span 6; }
+        .col-4 { grid-column: span 4; }
+        
+        .division-pills {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .division-pill {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            transition: transform 0.2s ease;
+        }
+        
+        .division-pill:hover {
+            transform: scale(1.05);
+        }
+        
+        .flowchart-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        
+        .flowchart-steps::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .flowchart-steps::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 4px;
+        }
+        
+        .flowchart-steps::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            position: relative;
+            background: rgba(15, 23, 42, 0.3);
+        }
+        
+        .flow-step::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 1rem;
+            background: var(--border);
+        }
+        
+        .flow-step:last-child::after {
+            display: none;
+        }
+        
+        .step-number {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+            word-break: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .dataflow-items {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        
+        .dataflow-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.5);
+        }
+        
+        .dataflow-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .dataflow-content {
+            flex: 1;
+        }
+        
+        .dataflow-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .dataflow-desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            word-break: break-word;
+        }
+        
+        .memory-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .memory-table th,
+        .memory-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .memory-table th {
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .memory-table tr:hover {
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .memory-table td {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .execution-timeline {
+            position: relative;
+            padding-left: 2rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .execution-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.75rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+        
+        .timeline-step {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--primary);
+        }
+        
+        .timeline-content {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-word;
+        }
+        
+        .empty-state {
+            color: #94a3b8;
+            font-style: italic;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .io { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .input { background: linear-gradient(135deg, #10b981, #047857); }
+        .decision { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .compute { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+        .call { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .end { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .normal { background: linear-gradient(135deg, #64748b, #475569); }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+        .card:nth-child(6) { animation-delay: 0.6s; }
+        
+        @media (max-width: 1200px) {
+            .col-8, .col-6, .col-4 {
+                grid-column: span 12;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .program-header {
+                flex-direction: column;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>COBOL Program Visualization</h1>
+            <p class="subtitle">Interactive analysis of program structure and execution flow</p>
+            <div class="format-badge">FREE FORMAT</div>
+        </header>
+        
+        <div class="program-header">
+            <div class="program-info-item">
+                <div class="program-info-label">Program ID</div>
+                <div class="program-info-value">USERINPUT-DEMO</div>
+            </div>
+            <div class="program-info-item">
+                <div class="program-info-label">Author</div>
+                <div class="program-info-value">Not specified</div>
+            </div>
+            <div class="program-info-item">
+                <div class="program-info-label">Date Written</div>
+                <div class="program-info-value">Not specified</div>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">11</div>
+                <div class="stat-label">Total Statements</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">9</div>
+                <div class="stat-label">I/O Operations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1</div>
+                <div class="stat-label">Computations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Decisions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Calls/Performs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Variables</div>
+            </div>
+        </div>
+        
+        <div class="dashboard">
+            <div class="card col-12">
+                <div class="card-header">
+                    <div class="card-icon io">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h2 class="card-title">Division Structure</h2>
+                </div>
+                <div class="division-pills">
+                    <div class="division-pill"><i class="fas fa-id-card"></i> IDENTIFICATION DIVISION</div><div class="division-pill"><i class="fas fa-database"></i> DATA DIVISION</div><div class="division-pill"><i class="fas fa-cogs"></i> PROCEDURE DIVISION</div>
+                </div>
+            </div>
+            
+            <div class="card col-8">
+                <div class="card-header">
+                    <div class="card-icon compute">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h2 class="card-title">Program Flow</h2>
+                </div>
+                <div class="flowchart-steps">
+                    
+            <div class="flow-step">
+                <div class="step-number io">1</div>
+                <div class="step-content">DISPLAY "Enter your name: "</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number input">2</div>
+                <div class="step-content">ACCEPT USER-NAME</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number io">3</div>
+                <div class="step-content">DISPLAY "Enter your age: "</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number input">4</div>
+                <div class="step-content">ACCEPT USER-AGE</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number compute">5</div>
+                <div class="step-content">COMPUTE BIRTH-YEAR = CURRENT-YEAR - USER-AGE</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number io">6</div>
+                <div class="step-content">DISPLAY "-----------------------------"</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number io">7</div>
+                <div class="step-content">DISPLAY "Welcome, " USER-NAME</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number io">8</div>
+                <div class="step-content">DISPLAY "Organization: " COMPANY-NAME</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number io">9</div>
+                <div class="step-content">DISPLAY "You were born in: " BIRTH-YEAR</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number io">10</div>
+                <div class="step-content">DISPLAY "-----------------------------"</div>
+            </div>
+            
+            <div class="flow-step">
+                <div class="step-number end">11</div>
+                <div class="step-content">STOP RUN.</div>
+            </div>
+            
+                </div>
+            </div>
+            
+            <div class="card col-4">
+                <div class="card-header">
+                    <div class="card-icon call">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h2 class="card-title">Data Flow</h2>
+                </div>
+                <div class="dataflow-items">
+                    
+                <div class="dataflow-item">
+                    <div class="dataflow-icon io">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Output</div>
+                        <div class="dataflow-desc">Enter your name: </div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon input">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Input</div>
+                        <div class="dataflow-desc">Accept value into USER-NAME</div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon io">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Output</div>
+                        <div class="dataflow-desc">Enter your age: </div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon input">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Input</div>
+                        <div class="dataflow-desc">Accept value into USER-AGE</div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon compute">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Computation</div>
+                        <div class="dataflow-desc">BIRTH-YEAR = CURRENT-YEAR - USER-AGE</div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon io">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Output</div>
+                        <div class="dataflow-desc">-----------------------------</div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon io">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Output</div>
+                        <div class="dataflow-desc">Welcome, </div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon io">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Output</div>
+                        <div class="dataflow-desc">Organization: </div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon io">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Output</div>
+                        <div class="dataflow-desc">You were born in: </div>
+                    </div>
+                </div>
+                
+                <div class="dataflow-item">
+                    <div class="dataflow-icon io">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <div class="dataflow-content">
+                        <div class="dataflow-title">Output</div>
+                        <div class="dataflow-desc">-----------------------------</div>
+                    </div>
+                </div>
+                
+                </div>
+            </div>
+            
+            <div class="card col-6">
+                <div class="card-header">
+                    <div class="card-icon input">
+                        <i class="fas fa-memory"></i>
+                    </div>
+                    <h2 class="card-title">Memory Layout</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="memory-table">
+                        <thead>
+                            <tr>
+                                <th>Variable</th>
+                                <th>Type</th>
+                                <th>Initial Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+            <tr>
+                <td>COMPANY-NAME</td>
+                <td>X(20)</td>
+                <td>IIT Tirupati</td>
+            </tr>
+            
+            <tr>
+                <td>CURRENT-YEAR</td>
+                <td>9(4)</td>
+                <td>2026</td>
+            </tr>
+            
+            <tr>
+                <td>USER-NAME</td>
+                <td>X(30)</td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>USER-AGE</td>
+                <td>99</td>
+                <td>N/A</td>
+            </tr>
+            
+            <tr>
+                <td>BIRTH-YEAR</td>
+                <td>9(4)</td>
+                <td>N/A</td>
+            </tr>
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card col-6">
+                <div class="card-header">
+                    <div class="card-icon decision">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h2 class="card-title">Execution Trace</h2>
+                </div>
+                <div class="execution-timeline">
+                    
+            <div class="timeline-item">
+                <div class="timeline-step">Step 1 - IO</div>
+                <div class="timeline-content">DISPLAY "Enter your name: "</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 2 - INPUT</div>
+                <div class="timeline-content">ACCEPT USER-NAME</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 3 - IO</div>
+                <div class="timeline-content">DISPLAY "Enter your age: "</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 4 - INPUT</div>
+                <div class="timeline-content">ACCEPT USER-AGE</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 5 - COMPUTE</div>
+                <div class="timeline-content">COMPUTE BIRTH-YEAR = CURRENT-YEAR - USER-AGE</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 6 - IO</div>
+                <div class="timeline-content">DISPLAY "-----------------------------"</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 7 - IO</div>
+                <div class="timeline-content">DISPLAY "Welcome, " USER-NAME</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 8 - IO</div>
+                <div class="timeline-content">DISPLAY "Organization: " COMPANY-NAME</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 9 - IO</div>
+                <div class="timeline-content">DISPLAY "You were born in: " BIRTH-YEAR</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 10 - IO</div>
+                <div class="timeline-content">DISPLAY "-----------------------------"</div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-step">Step 11 - END</div>
+                <div class="timeline-content">STOP RUN.</div>
+            </div>
+            
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    

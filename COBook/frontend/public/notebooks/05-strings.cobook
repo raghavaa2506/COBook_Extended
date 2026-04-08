@@ -1,0 +1,24 @@
+{
+  "name": "05 - String Operations",
+  "version": "1.0",
+  "cells": [
+    {
+      "id": 1,
+      "type": "text",
+      "content": "<h1>String Operations in COBOL</h1><p>COBOL provides <strong>STRING</strong>, <strong>UNSTRING</strong>, <strong>INSPECT</strong>, and <strong>MOVE</strong> for string manipulation. These are powerful but behave differently from modern languages.</p>"
+    },
+    {
+      "id": 2,
+      "type": "code",
+      "content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. StringOps.\n\n       DATA DIVISION.\n       WORKING-STORAGE SECTION.\n       01 WS-FIRST-NAME   PIC X(15) VALUE 'JOHN            '.\n       01 WS-LAST-NAME    PIC X(15) VALUE 'DOE             '.\n       01 WS-FULL-NAME    PIC X(31).\n       01 WS-EMAIL        PIC X(50) VALUE 'john.doe@example.com'.\n       01 WS-USER         PIC X(20).\n       01 WS-DOMAIN       PIC X(30).\n       01 WS-COUNTER      PIC 9(3).\n       01 WS-LENGTH       PIC 9(3).\n\n       PROCEDURE DIVISION.\n           DISPLAY '=== STRING Operations ==='.\n\n           STRING FUNCTION TRIM(WS-FIRST-NAME)\n               DELIMITED SPACE\n               ' '\n               DELIMITED SIZE\n               FUNCTION TRIM(WS-LAST-NAME)\n               DELIMITED SPACE\n               INTO WS-FULL-NAME.\n           DISPLAY 'Full name: ' WS-FULL-NAME.\n\n           DISPLAY '=== UNSTRING Operations ==='.\n           UNSTRING WS-EMAIL\n               DELIMITED '@'\n               INTO WS-USER WS-DOMAIN.\n           DISPLAY 'User:   ' WS-USER.\n           DISPLAY 'Domain: ' WS-DOMAIN.\n\n           DISPLAY '=== INSPECT Operations ==='.\n           INSPECT WS-FULL-NAME\n               TALLYING WS-COUNTER FOR ALL ' '.\n           DISPLAY 'Spaces in name: ' WS-COUNTER.\n\n           STOP RUN.",
+      "output": ""
+    },
+    {
+      "id": 3,
+      "type": "text",
+      "content": "<h2>Key Differences from Modern Languages</h2><ul><li>COBOL strings are <strong>fixed-width</strong> — <code>PIC X(15)</code> always uses exactly 15 bytes, padded with spaces</li><li><strong>FUNCTION TRIM</strong> removes trailing spaces</li><li><strong>UNSTRING</strong> splits a string by a delimiter (like Python's <code>split()</code>)</li><li><strong>INSPECT ... TALLYING</strong> counts occurrences of a character</li></ul>"
+    }
+  ],
+  "comments": {}
+}
+

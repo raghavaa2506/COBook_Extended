@@ -1,0 +1,24 @@
+{
+  "name": "04 - Tables and Arrays",
+  "version": "1.0",
+  "cells": [
+    {
+      "id": 1,
+      "type": "text",
+      "content": "<h1>Tables (Arrays) in COBOL</h1><p>COBOL uses the <strong>OCCURS</strong> clause to define arrays (called <em>tables</em> in COBOL terminology). Tables can be single or multi-dimensional.</p>"
+    },
+    {
+      "id": 2,
+      "type": "code",
+      "content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. TableDemo.\n\n       DATA DIVISION.\n       WORKING-STORAGE SECTION.\n       01 WS-MONTHS-TABLE.\n           05 WS-MONTH OCCURS 12 TIMES.\n               10 WS-MONTH-NAME  PIC X(10).\n               10 WS-MONTH-DAYS  PIC 9(2).\n       01 WS-IDX            PIC 9(2).\n       01 WS-TOTAL-DAYS     PIC 9(4) VALUE 0.\n\n       PROCEDURE DIVISION.\n           MOVE 'January  ' TO WS-MONTH-NAME(1).\n           MOVE 31 TO WS-MONTH-DAYS(1).\n           MOVE 'February ' TO WS-MONTH-NAME(2).\n           MOVE 28 TO WS-MONTH-DAYS(2).\n           MOVE 'March    ' TO WS-MONTH-NAME(3).\n           MOVE 31 TO WS-MONTH-DAYS(3).\n           MOVE 'April    ' TO WS-MONTH-NAME(4).\n           MOVE 30 TO WS-MONTH-DAYS(4).\n           MOVE 'May      ' TO WS-MONTH-NAME(5).\n           MOVE 31 TO WS-MONTH-DAYS(5).\n           MOVE 'June     ' TO WS-MONTH-NAME(6).\n           MOVE 30 TO WS-MONTH-DAYS(6).\n           MOVE 'July     ' TO WS-MONTH-NAME(7).\n           MOVE 31 TO WS-MONTH-DAYS(7).\n           MOVE 'August   ' TO WS-MONTH-NAME(8).\n           MOVE 31 TO WS-MONTH-DAYS(8).\n           MOVE 'September' TO WS-MONTH-NAME(9).\n           MOVE 30 TO WS-MONTH-DAYS(9).\n           MOVE 'October  ' TO WS-MONTH-NAME(10).\n           MOVE 31 TO WS-MONTH-DAYS(10).\n           MOVE 'November ' TO WS-MONTH-NAME(11).\n           MOVE 30 TO WS-MONTH-DAYS(11).\n           MOVE 'December ' TO WS-MONTH-NAME(12).\n           MOVE 31 TO WS-MONTH-DAYS(12).\n\n           DISPLAY '=== Month Calendar ==='.\n           PERFORM VARYING WS-IDX FROM 1 BY 1\n               UNTIL WS-IDX > 12\n               DISPLAY WS-MONTH-NAME(WS-IDX)\n                   ' - ' WS-MONTH-DAYS(WS-IDX) ' days'\n               ADD WS-MONTH-DAYS(WS-IDX) TO WS-TOTAL-DAYS\n           END-PERFORM.\n\n           DISPLAY '====================='.\n           DISPLAY 'Total days: ' WS-TOTAL-DAYS.\n           STOP RUN.",
+      "output": ""
+    },
+    {
+      "id": 3,
+      "type": "text",
+      "content": "<h2>OCCURS Clause Explained</h2><p><code>05 WS-MONTH OCCURS 12 TIMES</code> creates an array of 12 elements. Each element has two sub-fields (<code>WS-MONTH-NAME</code> and <code>WS-MONTH-DAYS</code>). Elements are accessed with a numeric subscript: <code>WS-MONTH-NAME(3)</code> is March.</p><p>Use the <strong>Data Dictionary</strong> tab in the visualization panel to see the full variable structure with OCCURS information!</p>"
+    }
+  ],
+  "comments": {}
+}
+

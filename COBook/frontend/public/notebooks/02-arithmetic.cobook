@@ -1,0 +1,30 @@
+{
+  "name": "02 - Arithmetic Operations",
+  "version": "1.0",
+  "cells": [
+    {
+      "id": 1,
+      "type": "text",
+      "content": "<h1>Arithmetic in COBOL</h1><p>COBOL provides dedicated verbs for arithmetic: <strong>ADD</strong>, <strong>SUBTRACT</strong>, <strong>MULTIPLY</strong>, <strong>DIVIDE</strong>, and <strong>COMPUTE</strong>.</p><p>Unlike most languages, COBOL arithmetic reads like English sentences.</p>"
+    },
+    {
+      "id": 2,
+      "type": "code",
+      "content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. Arithmetic.\n\n       DATA DIVISION.\n       WORKING-STORAGE SECTION.\n       01 WS-NUM-A      PIC 9(5)   VALUE 1500.\n       01 WS-NUM-B      PIC 9(5)   VALUE 350.\n       01 WS-RESULT     PIC 9(7).\n       01 WS-DECIMAL    PIC 9(5)V99.\n\n       PROCEDURE DIVISION.\n           DISPLAY '=== COBOL Arithmetic Demo ==='.\n\n           ADD WS-NUM-A TO WS-NUM-B GIVING WS-RESULT.\n           DISPLAY 'Addition:       ' WS-RESULT.\n\n           SUBTRACT WS-NUM-B FROM WS-NUM-A GIVING WS-RESULT.\n           DISPLAY 'Subtraction:    ' WS-RESULT.\n\n           MULTIPLY WS-NUM-A BY WS-NUM-B GIVING WS-RESULT.\n           DISPLAY 'Multiplication: ' WS-RESULT.\n\n           DIVIDE WS-NUM-A BY WS-NUM-B GIVING WS-DECIMAL.\n           DISPLAY 'Division:       ' WS-DECIMAL.\n\n           COMPUTE WS-RESULT = WS-NUM-A ** 2.\n           DISPLAY 'Squared:        ' WS-RESULT.\n\n           STOP RUN.",
+      "output": ""
+    },
+    {
+      "id": 3,
+      "type": "text",
+      "content": "<h2>PIC Clause Reference</h2><p>Notice the different PIC clauses used above:</p><ul><li><code>PIC 9(5)</code> — 5-digit unsigned integer (0 to 99999)</li><li><code>PIC 9(7)</code> — 7-digit unsigned integer (for larger results)</li><li><code>PIC 9(5)V99</code> — 5 integer digits + 2 decimal places (V = virtual decimal point)</li></ul><p>Click on any PIC clause in the <strong>Data Dictionary</strong> tab of the visualization panel to decode it!</p>"
+    },
+    {
+      "id": 4,
+      "type": "code",
+      "content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. Calculator.\n\n       DATA DIVISION.\n       WORKING-STORAGE SECTION.\n       01 WS-NUM1       PIC 9(5).\n       01 WS-NUM2       PIC 9(5).\n       01 WS-SUM        PIC 9(6).\n       01 WS-PRODUCT    PIC 9(10).\n\n       PROCEDURE DIVISION.\n           DISPLAY 'Enter first number: '.\n           ACCEPT WS-NUM1.\n           DISPLAY 'Enter second number: '.\n           ACCEPT WS-NUM2.\n\n           ADD WS-NUM1 WS-NUM2 GIVING WS-SUM.\n           MULTIPLY WS-NUM1 BY WS-NUM2 GIVING WS-PRODUCT.\n\n           DISPLAY 'Sum:     ' WS-SUM.\n           DISPLAY 'Product: ' WS-PRODUCT.\n           STOP RUN.",
+      "output": ""
+    }
+  ],
+  "comments": {}
+}
+

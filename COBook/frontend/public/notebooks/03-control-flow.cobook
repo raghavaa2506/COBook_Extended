@@ -1,0 +1,24 @@
+{
+  "name": "03 - Control Flow",
+  "version": "1.0",
+  "cells": [
+    {
+      "id": 1,
+      "type": "text",
+      "content": "<h1>Control Flow in COBOL</h1><p>COBOL uses <strong>IF/ELSE</strong>, <strong>EVALUATE</strong> (like switch/case), and <strong>PERFORM</strong> (loop/subroutine call) for control flow.</p>"
+    },
+    {
+      "id": 2,
+      "type": "code",
+      "content": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. ControlFlow.\n\n       DATA DIVISION.\n       WORKING-STORAGE SECTION.\n       01 WS-SCORE      PIC 9(3) VALUE 75.\n       01 WS-GRADE      PIC X.\n       01 WS-COUNTER    PIC 9(3) VALUE 0.\n       01 WS-MAX        PIC 9(3) VALUE 5.\n\n       PROCEDURE DIVISION.\n           PERFORM CHECK-GRADE.\n           PERFORM COUNT-LOOP.\n           PERFORM EVALUATE-DEMO.\n           STOP RUN.\n\n       CHECK-GRADE.\n           IF WS-SCORE >= 90\n               MOVE 'A' TO WS-GRADE\n           ELSE IF WS-SCORE >= 80\n               MOVE 'B' TO WS-GRADE\n           ELSE IF WS-SCORE >= 70\n               MOVE 'C' TO WS-GRADE\n           ELSE IF WS-SCORE >= 60\n               MOVE 'D' TO WS-GRADE\n           ELSE\n               MOVE 'F' TO WS-GRADE\n           END-IF.\n           DISPLAY 'Score: ' WS-SCORE ' -> Grade: ' WS-GRADE.\n\n       COUNT-LOOP.\n           PERFORM VARYING WS-COUNTER FROM 1 BY 1\n               UNTIL WS-COUNTER > WS-MAX\n               DISPLAY 'Count: ' WS-COUNTER\n           END-PERFORM.\n\n       EVALUATE-DEMO.\n           EVALUATE WS-GRADE\n               WHEN 'A' DISPLAY 'Excellent!'\n               WHEN 'B' DISPLAY 'Good job!'\n               WHEN 'C' DISPLAY 'Average'\n               WHEN 'D' DISPLAY 'Below average'\n               WHEN OTHER DISPLAY 'Failing'\n           END-EVALUATE.",
+      "output": ""
+    },
+    {
+      "id": 3,
+      "type": "text",
+      "content": "<h2>Key Concepts</h2><ul><li><strong>PERFORM paragraph-name</strong> — calls a paragraph (like a function)</li><li><strong>PERFORM VARYING ... UNTIL</strong> — a counted loop</li><li><strong>EVALUATE</strong> — COBOL's switch/case (much more powerful than most languages)</li><li><strong>END-IF / END-EVALUATE / END-PERFORM</strong> — explicit scope terminators (modern COBOL)</li></ul>"
+    }
+  ],
+  "comments": {}
+}
+
